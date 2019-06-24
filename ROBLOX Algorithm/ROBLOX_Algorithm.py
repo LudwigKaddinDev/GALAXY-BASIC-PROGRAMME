@@ -16,6 +16,11 @@ import threading
 # List of MATERIALS (raw ores):
 # Name of the ores in string values are ORENAME_NAME variables.
 
+COST_ENABLED = True
+TOGGLE = 0
+ENTERED_VALUE = False
+firstTime = 0
+
 global SILICATE
 global SILICATE_NAME
 global CARBON
@@ -31,10 +36,6 @@ global TITANIUM_NAME
 global QUANTIUM
 global QUANTIUM_NAME
 
-COST_ENABLED = True
-TOGGLE = 0
-ENTERED_VALUE = False
-
 SILICATE = 0
 CARBON = 0
 IRIDIUM = 0
@@ -47,7 +48,7 @@ SILICATE_NAME = "Silicate"
 CARBON_NAME = "Carbon"
 IRIDIUM_NAME = "Iridium"
 ADAMANTITE_NAME = "Adamantite"
-PALLADIUM_NAME = "Paladium"
+PALLADIUM_NAME = "Palladium"
 TITANIUM_NAME = "Titanium"
 QUANTIUM_NAME = "Quantium"
 
@@ -56,17 +57,15 @@ MATS_VALUE = [SILICATE, CARBON, IRIDIUM, ADAMANTITE, PALLADIUM, TITANIUM, QUANTI
 
 SHIP_VALUE = list(MATS_VALUE)
 
-
-
 print("The names of the current known materials are:", MATS_NAME)
 print()
 
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
 
-def coreFunction():
-    
-   
+def coreFunction():      
+
+    loadData()
 
     global COST_ENABLED
     global TOGGLE
@@ -126,10 +125,11 @@ def coreFunction():
     elif selection == 'x':
         print()
         
-        with open("output_data.csv", "w") as out_file:
+        with open("output_data.csv", "w", newline="") as out_file:
             data_writer = csv.writer(out_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             for i in range(len(MATS_NAME)):
                 data_writer.writerow([str(MATS_NAME[i]), str(MATS_VALUE[i]) ])
+            #data_writer.writerow([firstTime])
 
         SystemExit()
     elif selection == 'h':
@@ -189,8 +189,6 @@ def coreFunction():
 
 def updateInventory():
     
-    
-    
     ORES = 7
     v = int(0)
 
@@ -201,10 +199,21 @@ def updateInventory():
     print("Press", ORES, "to go back to the main menu.")
     print()
 
+    print("You currently own: ")
+    print()
+
+    m = int(0)
+
+    while m < ORES:
+        print(MATS_NAME[m], MATS_VALUE[m])
+        m += 1
+    print()
+
     oreUpdate = getInteger("Make your selection: ")
 
     if oreUpdate < ORES:
         MATS_VALUE[oreUpdate] = getInteger("Input the new value: ")
+        saveData()
         print()
         updateAgain = getString("Do you with to update another value? (y/n) ")
         if updateAgain == 'y':
@@ -281,6 +290,24 @@ def shipCost():
     
     return;
 
+
+def saveData():
+
+    with open("output_data.csv", "w", newline="") as out_file:
+            data_writer = csv.writer(out_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            for i in range(len(MATS_NAME)):
+                data_writer.writerow([str(MATS_NAME[i]), str(MATS_VALUE[i]) ])
+
+    return;
+
+def loadData():
+    with open("output_data.csv") as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        z = 0
+        for row in csv_reader:
+            MATS_VALUE[z] = row[1]
+            z += 1
+    return;
 
 print()
 
