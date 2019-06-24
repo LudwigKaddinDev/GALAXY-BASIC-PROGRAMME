@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.705
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "ROBLOX Algorithm", "ROBLOX Algorithm\ROBLOX Algorithm.pyproj", "{ED68601E-F96C-4B22-B726-0A3C02BF5F49}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ED68601E-F96C-4B22-B726-0A3C02BF5F49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED68601E-F96C-4B22-B726-0A3C02BF5F49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {617DCEE0-5015-4297-B481-D9A514010950}
+	EndGlobalSection
+EndGlobal
