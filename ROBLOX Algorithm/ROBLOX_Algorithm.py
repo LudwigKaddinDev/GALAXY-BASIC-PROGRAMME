@@ -57,6 +57,8 @@ MATS_VALUE = [SILICATE, CARBON, IRIDIUM, ADAMANTITE, PALLADIUM, TITANIUM, QUANTI
 
 SHIP_VALUE = list(MATS_VALUE)
 
+
+
 print("The names of the current known materials are:", MATS_NAME)
 print()
 
@@ -188,6 +190,7 @@ def coreFunction():
         SHIP_VALUE = MATS_VALUE
         print()
         print("All data has been reset.")
+        ENTERED_VALUE = False
         timer100 = threading.Timer(2, cls)
         timer100.start()
         timer110 = threading.Timer(2.1, coreFunction)
@@ -277,7 +280,7 @@ def shipCost():
     m = int(0)
 
     while m < ORES:
-        print(MATS_NAME[m], MATS_VALUE[m])
+        print(MATS_NAME[m], SHIP_VALUE[m])
         m += 1
     print()
 
