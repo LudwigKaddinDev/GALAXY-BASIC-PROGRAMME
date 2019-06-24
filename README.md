@@ -1,8 +1,7 @@
 # GALAXY-BASIC-PROGRAMME
 Basic Python programme used for calculating ship costs and maintaining your inventory.
 
-THE CURRENT VERSION DOES NOT INCLUDE SAVING! ONCE YOU CLOSE THE PROGRAM YOU NEED TO RE-ENTER ALL VALUES. ITS BASED ON USER INPUT. 
-THIS IS SUBJECT TO CHANGE.
+The current version includes full ship cost and inventory saving.
 
 This programme is for the ROBLOX game of GALAXY. 
 It can be used to calculate how many materials you still need for a new ship, based on USER input. 
