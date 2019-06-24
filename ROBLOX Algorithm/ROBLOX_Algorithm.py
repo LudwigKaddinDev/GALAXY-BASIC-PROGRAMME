@@ -19,7 +19,7 @@ import threading
 COST_ENABLED = True
 TOGGLE = 0
 ENTERED_VALUE = False
-firstTime = 0
+#firstTime = 0
 
 global SILICATE
 global SILICATE_NAME
@@ -67,6 +67,7 @@ def coreFunction():
 
     loadData()
 
+    global SHIP_VALUE
     global COST_ENABLED
     global TOGGLE
     global ENTERED_VALUE
@@ -101,11 +102,11 @@ def coreFunction():
             print("You still need:")
             print()
             while y < ORES:
-                if SHIP_VALUE[y] - MATS_VALUE[y] <= 0:
+                if int(SHIP_VALUE[(y)]) - int(MATS_VALUE[y]) <= 0:
                     print(MATS_NAME[y], "0")
                     y += 1
                 else:
-                    print(MATS_NAME[y], SHIP_VALUE[y] - MATS_VALUE[y])
+                    print(MATS_NAME[y], int(SHIP_VALUE[y]) - int(MATS_VALUE[y]))
                     y += 1
         print()    
 
@@ -115,6 +116,8 @@ def coreFunction():
          print("Press 'c' to set a shipcost.")
     print("Press 'h' to see what this program is meant for.")
     print("Press 'f' to enable/disable ship cost calculation.")
+    print()
+    print("Press 'r' to reset your inventory.")
     print()
 
     selection = getString("Please make your selection now: ")
@@ -177,6 +180,18 @@ def coreFunction():
             timer11 = threading.Timer(2.1, coreFunction)
             timer11.start()
             TOGGLE = 0
+    elif selection == 'r':
+        listlength = len(MATS_VALUE)
+        for i in range(listlength):
+            MATS_VALUE[i] = 0
+        saveData()
+        SHIP_VALUE = MATS_VALUE
+        print()
+        print("All data has been reset.")
+        timer100 = threading.Timer(2, cls)
+        timer100.start()
+        timer110 = threading.Timer(2.1, coreFunction)
+        timer110.start()
     else:
         print()
         print("Please make a valid selection.")
@@ -257,6 +272,17 @@ def shipCost():
     print("Press", ORES, "to go back to the main menu.")
     print()
 
+    print("You current ship costs are: ")
+    print()
+    m = int(0)
+
+    while m < ORES:
+        print(MATS_NAME[m], MATS_VALUE[m])
+        m += 1
+    print()
+
+    print()
+
     oreUpdate = getInteger("Make your selection: ")
 
     if oreUpdate < ORES:
@@ -275,7 +301,7 @@ def shipCost():
             print("Please make a valid selection.")
             timer = threading.Timer(2, cls)
             timer.start()
-            timer2 = threading.Timer(2.1, updateInventory)
+            timer2 = threading.Timer(2.1, shipCost)
             timer2.start()
     elif oreUpdate == ORES:
         cls()
