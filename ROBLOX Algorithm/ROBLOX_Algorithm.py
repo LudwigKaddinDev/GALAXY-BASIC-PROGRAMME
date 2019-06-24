@@ -129,13 +129,7 @@ def coreFunction():
         updateInventory()
     elif selection == 'x':
         print()
-        
-        with open("output_data.csv", "w", newline="") as out_file:
-            data_writer = csv.writer(out_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-            for i in range(len(MATS_NAME)):
-                data_writer.writerow([str(MATS_NAME[i]), str(MATS_VALUE[i]) ])
-            #data_writer.writerow([firstTime])
-
+        saveData()
         SystemExit()
     elif selection == 'h':
         cls()
@@ -143,9 +137,9 @@ def coreFunction():
         l = 4
         while x < l:
             print(info[x])
-            if x == 3:
-                print()
-                print(info[x])
+            #if x == 3:
+                #print()
+                #print(info[x])
             x += 1
         print()
         coreLoop = input("Press Enter to continue.")
@@ -186,11 +180,11 @@ def coreFunction():
         listlength = len(MATS_VALUE)
         for i in range(listlength):
             MATS_VALUE[i] = 0
-        saveData()
-        SHIP_VALUE = MATS_VALUE
+            SHIP_VALUE[i] = 0
         print()
         print("All data has been reset.")
         ENTERED_VALUE = False
+        saveData()
         timer100 = threading.Timer(2, cls)
         timer100.start()
         timer110 = threading.Timer(2.1, coreFunction)
@@ -291,6 +285,7 @@ def shipCost():
     if oreUpdate < ORES:
         SHIP_VALUE[oreUpdate] = getInteger("Input the new value: ")
         ENTERED_VALUE = True
+        saveData()
         print()
         updateAgain = getString("Do you with to update another value? (y/n) ")
         if updateAgain == 'y':
@@ -326,16 +321,33 @@ def saveData():
             data_writer = csv.writer(out_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
             for i in range(len(MATS_NAME)):
                 data_writer.writerow([str(MATS_NAME[i]), str(MATS_VALUE[i]) ])
+    
+    with open("shipcost_data.csv", "w", newline="") as out_file2:
+            data_writer2 = csv.writer(out_file2, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            for i in range(len(MATS_NAME)):
+                data_writer2.writerow([str(MATS_NAME[i]), str(SHIP_VALUE[i]) ])
 
     return;
 
 def loadData():
+    
+    global ENTERED_VALUE
+
     with open("output_data.csv") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         z = 0
         for row in csv_reader:
             MATS_VALUE[z] = row[1]
             z += 1
+
+    with open("shipcost_data.csv") as csv_file3:
+        csv_reader3 = csv.reader(csv_file3, delimiter=',')
+        b = 0
+        for row2 in csv_reader3:
+            SHIP_VALUE[b] = row2[1]
+            b += 1
+            if int(row2[1]) > 0:
+                ENTERED_VALUE = True
     return;
 
 print()
