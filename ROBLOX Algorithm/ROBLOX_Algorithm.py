@@ -10,6 +10,7 @@ info = [["This programme is for the ROBLOX game of GALAXY"], # 0
 
 import os
 from pcinput import getString, getInteger
+import csv
 import threading
 
 # List of MATERIALS (raw ores):
@@ -124,6 +125,12 @@ def coreFunction():
         updateInventory()
     elif selection == 'x':
         print()
+        
+        with open("output_data.csv", "w") as out_file:
+            data_writer = csv.writer(out_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+            for i in range(len(MATS_NAME)):
+                data_writer.writerow([str(MATS_NAME[i]), str(MATS_VALUE[i]) ])
+
         SystemExit()
     elif selection == 'h':
         cls()
@@ -273,5 +280,8 @@ def shipCost():
         timer2.start()
     
     return;
+
+
+print()
 
 coreFunction()
