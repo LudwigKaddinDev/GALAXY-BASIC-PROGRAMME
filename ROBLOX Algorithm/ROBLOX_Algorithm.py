@@ -19,22 +19,7 @@ import threading
 COST_ENABLED = True
 TOGGLE = 0
 ENTERED_VALUE = False
-#firstTime = 0
-
-global SILICATE
-global SILICATE_NAME
-global CARBON
-global CARBON_NAME
-global IRIDIUM
-global IRIDIUM_NAME
-global ADAMANTITE
-global ADAMANTITE_NAME
-global PALLADIUM
-global PALLADIUM_NAME
-global TITANIUM
-global TITANIUM_NAME
-global QUANTIUM
-global QUANTIUM_NAME
+firstTime = 1
 
 SILICATE = 0
 CARBON = 0
@@ -73,8 +58,10 @@ def coreFunction():
     global COST_ENABLED
     global TOGGLE
     global ENTERED_VALUE
+    global ORES
 
-    ORES = 7
+    ORES = len(MATS_NAME)
+
     v = int(0)
 
     print("You currently own: ")
@@ -201,7 +188,6 @@ def coreFunction():
 
 def updateInventory():
     
-    ORES = 7
     v = int(0)
 
     while v < ORES:
@@ -259,7 +245,6 @@ def shipCost():
     
     global ENTERED_VALUE
 
-    ORES = 7
     v = int(0)
 
     while v < ORES:
@@ -333,21 +318,28 @@ def loadData():
     
     global ENTERED_VALUE
 
-    with open("output_data.csv") as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=',')
-        z = 0
-        for row in csv_reader:
-            MATS_VALUE[z] = row[1]
-            z += 1
+    try:
+        with open("output_data.csv") as csv_file:
+            csv_reader = csv.reader(csv_file, delimiter=',')
+            z = 0
+            for row in csv_reader:
+                MATS_VALUE[z] = row[1]
+                z += 1
+    
+        with open("shipcost_data.csv") as csv_file3:
+            csv_reader3 = csv.reader(csv_file3, delimiter=',')
+            b = 0
+            for row2 in csv_reader3:
+                SHIP_VALUE[b] = row2[1]
+                b += 1
+                if int(row2[1]) > 0:
+                    ENTERED_VALUE = True
 
-    with open("shipcost_data.csv") as csv_file3:
-        csv_reader3 = csv.reader(csv_file3, delimiter=',')
-        b = 0
-        for row2 in csv_reader3:
-            SHIP_VALUE[b] = row2[1]
-            b += 1
-            if int(row2[1]) > 0:
-                ENTERED_VALUE = True
+    except Exception:
+        print(MATS_VALUE)
+        saveData()
+        print(MATS_VALUE)
+
     return;
 
 print()
