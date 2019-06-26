@@ -13,7 +13,6 @@ info = [["This programme is for the ROBLOX game of GALAXY"], # 0
 import os
 from pcinput import getString, getInteger
 import csv
-import threading
 import time
 
 COST_ENABLED = True
