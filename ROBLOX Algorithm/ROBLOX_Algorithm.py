@@ -2,6 +2,8 @@
 # It can be used to calculate how many materials you still need for a new ship, based on USER input. 
 # You can also use it to keep track of your materials mined (and skip ship cost calculation all together). 
 
+# NOTE: MANY MORE FEATURES HAVE BEEN ADDED AND A FULL FEATURE LIST WILL BE MADE SOON.
+
 global info
 info = [["This programme is for the ROBLOX game of GALAXY"], # 0
         ["It can be used to calculate how many materials you still need for a new ship, based on USER input.", ], # 1
@@ -14,12 +16,10 @@ import csv
 import threading
 import time
 
-# List of MATERIALS (raw ores):
-# Name of the ores in string values are ORENAME_NAME variables.
-
 COST_ENABLED = True
 TOGGLE = 0
 ENTERED_VALUE = False
+popSource = 0
 
 # Standard Defined Materials
 
@@ -50,31 +50,34 @@ def coreFunction():
     global MATS_NAME
     global MATS_VALUE
     global SHIP_VALUE
-
-    mats_string = ', '.join(MATS_NAME)
-    print("The names of the current known materials are:", mats_string)
-    print()
-
-    loadData()
-
-    global SHIP_VALUE
+    global ORES
     global COST_ENABLED
     global TOGGLE
     global ENTERED_VALUE
-    global ORES
     global firstLoad
 
     ORES = len(MATS_NAME)
 
-    v = int(0)
+    if MATS_NAME:
+        mats_string = ', '.join(MATS_NAME)
+        print("The names of the current known materials are:", mats_string)
+        print()
 
-    print("You currently own: ")
-    print()
-    while v < ORES:
-        print(MATS_NAME[v], MATS_VALUE[v])
-        v += 1
+        v = int(0)
+
+        print("You currently own: ")
+        print()
+        while v < ORES:
+            print(MATS_NAME[v], MATS_VALUE[v])
+            v += 1
     
-    print()
+        print()
+
+    if not MATS_NAME:
+        print("There are no currently known materials.")
+        print()
+
+    loadData()
 
     if COST_ENABLED == True and ENTERED_VALUE == True:
 
@@ -116,6 +119,7 @@ def coreFunction():
     print()
 
     selection = getString("Please make your selection now: ")
+    print()
 
     if selection == 'u':
         cls()
@@ -153,29 +157,28 @@ def coreFunction():
 
         else:
             print("You have disabled this feature.")
-            timer5 = threading.Timer(2, cls)
-            timer5.start()
-            timer6 = threading.Timer(2.1, coreFunction)
-            timer6.start()
+            time.sleep(2)
+            cls()
+            coreFunction()
 
     elif selection == 'f':
         if TOGGLE == 0:
             COST_ENABLED = False
             print("Ship cost calculation is now disabled.")
-            timer3 = threading.Timer(2, cls)
-            timer3.start()
-            timer4 = threading.Timer(2.1, coreFunction)
-            timer4.start()
+            time.sleep(2)
+            cls()
             TOGGLE = 1
+            coreFunction()
+
 
         elif TOGGLE == 1:
             COST_ENABLED = True
             print("Ship cost calculation is now enabled.")
-            timer10 = threading.Timer(2, cls)
-            timer10.start()
-            timer11 = threading.Timer(2.1, coreFunction)
-            timer11.start()
             TOGGLE = 0
+            time.sleep(2)
+            cls()
+            coreFunction()
+           
 
     elif selection == 'r':
         listlength = len(MATS_VALUE)
@@ -185,10 +188,9 @@ def coreFunction():
         print()
         print("Your inventory has been reset.")
         saveData()
-        timer100 = threading.Timer(2, cls)
-        timer100.start()
-        timer110 = threading.Timer(2.1, coreFunction)
-        timer110.start()
+        time.sleep(2)
+        cls()
+        coreFunction()
 
     elif selection == 'rx':
         listlength = len(MATS_VALUE)
@@ -201,10 +203,9 @@ def coreFunction():
         firstLoad = 1
         beginChoice = ""
         saveData()
-        timer100 = threading.Timer(2, cls)
-        timer100.start()
-        timer110 = threading.Timer(2.1, firstLoading)
-        timer110.start()
+        time.sleep(2)
+        cls()
+        firstLoading()
 
     elif selection == 'm':
         cls()
@@ -213,70 +214,65 @@ def coreFunction():
     else:
         print()
         print("Please make a valid selection.")
-        timer = threading.Timer(2, cls)
-        timer.start()
-        timer2 = threading.Timer(2.1, coreFunction)
-        timer2.start()
+        time.sleep(2)
+        cls()
+        coreFunction()
 
     return;
 
 def updateInventory():
     
     v = int(0)
-
-    while v < ORES:
-        print("Press", v, "to edit the amount of", MATS_NAME[v], "you currently own.")
-        v += 1
-    
-    print("Press", ORES, "to go back to the main menu.")
-    print()
-
-    print("You currently own: ")
-    print()
-
     m = int(0)
 
-    while m < ORES:
-        print(MATS_NAME[m], MATS_VALUE[m])
-        m += 1
-    print()
-
-    oreUpdate = getInteger("Make your selection: ")
-
-    if oreUpdate < ORES:
-        MATS_VALUE[oreUpdate] = getInteger("Input the new value: ")
-        saveData()
+    if MATS_NAME:
+        while v < ORES:
+            print("Press", v, "to edit the amount of", MATS_NAME[v], "in your inventory.")
+            v += 1
+        print("Press", ORES, "to go back to the main menu.")
         print()
-        updateAgain = getString("Do you with to update another value? (y/n) ")
-        
-        if updateAgain == 'y':
-            cls()
-            updateInventory()
+        print("You current own: ")
+        print()
 
-        elif updateAgain == 'n':
+        while m < ORES:
+            print(MATS_NAME[m], MATS_VALUE[m])
+            m += 1
+
+        print()
+
+        oreUpdate = getInteger("Make your selection: ")
+
+        if oreUpdate < ORES:
+            MATS_VALUE[oreUpdate] = getInteger("Input the new value: ")
+            saveData()
+            print()
+            updateAgain = getString("Do you with to update another value? (y/n) ")
+
+            if updateAgain == 'y':
+                cls()
+                updateInventory()
+
+            elif updateAgain == 'n':
+                cls()
+                coreFunction()
+
+        elif oreUpdate == ORES:
             cls()
             coreFunction()
 
         else:
             print()
             print("Please make a valid selection.")
-            timer = threading.Timer(2, cls)
-            timer.start()
-            timer2 = threading.Timer(2.1, updateInventory)
-            timer2.start()
+            time.sleep(2)
+            cls()
+            updateInventory()
 
-    elif oreUpdate == ORES:
-        cls()
-        coreFunction()
 
-    else:
-        print()
-        print("Please make a valid selection.")
-        timer = threading.Timer(2, cls)
-        timer.start()
-        timer2 = threading.Timer(2.1, updateInventory)
-        timer2.start()
-
+    if not MATS_NAME:
+           print("There are no materials for the ship cost to be updated.")
+           time.sleep(2)
+           cls()
+           coreFunction()
 
     return;
 
@@ -285,86 +281,90 @@ def shipCost():
     global ENTERED_VALUE
 
     v = int(0)
-
-    while v < ORES:
-        print("Press", v, "to edit the amount of", MATS_NAME[v], "the ship you want costs.")
-        v += 1
-
-    print("Press", ORES, "to go back to the main menu.")
-    print()
-
-    print("You current ship costs are: ")
-    print()
     m = int(0)
 
-    while m < ORES:
-        print(MATS_NAME[m], SHIP_VALUE[m])
-        m += 1
-    print()
-
-    print()
-
-    oreUpdate = getInteger("Make your selection: ")
-
-    if oreUpdate < ORES:
-        SHIP_VALUE[oreUpdate] = getInteger("Input the new value: ")
-        ENTERED_VALUE = True
-        saveData()
+    if MATS_NAME:
+        while v < ORES:
+            print("Press", v, "to edit the amount of", MATS_NAME[v], "your ship costs.")
+            v += 1
+        print("Press", ORES, "to go back to the main menu.")
         print()
-        updateAgain = getString("Do you with to update another value? (y/n) ")
+        print("You current own: ")
+        print()
 
-        if updateAgain == 'y':
-            cls()
-            shipCost()
+        while m < ORES:
+            print(MATS_NAME[m], SHIP_VALUE[m])
+            m += 1
 
-        elif updateAgain == 'n':
+        print()
+
+        oreUpdate = getInteger("Make your selection: ")
+
+        if oreUpdate < ORES:
+            SHIP_VALUE[oreUpdate] = getInteger("Input the new value: ")
+            saveData()
+            print()
+            updateAgain = getString("Do you with to update another value? (y/n) ")
+
+            if updateAgain == 'y':
+                cls()
+                shipCost()
+
+            elif updateAgain == 'n':
+                cls()
+                coreFunction()
+
+        elif oreUpdate == ORES:
             cls()
             coreFunction()
 
         else:
             print()
             print("Please make a valid selection.")
-            timer = threading.Timer(2, cls)
-            timer.start()
-            timer2 = threading.Timer(2.1, shipCost)
-            timer2.start()
+            time.sleep(2)
+            cls()
+            shipCost()
 
-    elif oreUpdate == ORES:
-        cls()
-        coreFunction()
 
-    else:
-        print()
-        print("Please make a valid selection.")
-        timer = threading.Timer(2, cls)
-        timer.start()
-        timer2 = threading.Timer(2.1, shipCost)
-        timer2.start()
-    
+    if not MATS_NAME:
+           print("There are no materials for the ship cost to be updated.")
+           time.sleep(2)
+           cls()
+           coreFunction()
+
     return;
 
 
 def saveData():
 
-    with open("output_data.csv", "w", newline="") as out_file:
-            data_writer = csv.writer(out_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-            for i in range(len(MATS_NAME)):
-                data_writer.writerow([str(MATS_NAME[i]), str(MATS_VALUE[i]) ])
-    
-    with open("shipcost_data.csv", "w", newline="") as out_file2:
-            data_writer2 = csv.writer(out_file2, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-            for i in range(len(MATS_NAME)):
-                data_writer2.writerow([str(MATS_NAME[i]), str(SHIP_VALUE[i]) ])
+    try:
 
-    with open("first_load.csv", "w", newline="") as first_file:
-            first_writer = csv.writer(first_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-            line_count = 0
-            for i in range(2):
-                first_writer.writerow([int(firstLoad)])
-                line_count += 1
-                if line_count == 1:
-                    first_writer.writerow([beginChoice])
-                    break
+        with open("output_data.csv", "w", newline="") as out_file:
+                data_writer = csv.writer(out_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                for i in range(len(MATS_NAME)):
+                    data_writer.writerow([str(MATS_NAME[i]), str(MATS_VALUE[i]) ])
+    
+        with open("shipcost_data.csv", "w", newline="") as out_file2:
+                data_writer2 = csv.writer(out_file2, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                for i in range(len(MATS_NAME)):
+                    data_writer2.writerow([str(MATS_NAME[i]), str(SHIP_VALUE[i]) ])
+
+        with open("first_load.csv", "w", newline="") as first_file:
+                first_writer = csv.writer(first_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                line_count = 0
+                for i in range(2):
+                    first_writer.writerow([int(firstLoad)])
+                    line_count += 1
+                    if line_count == 1:
+                        first_writer.writerow([beginChoice])
+                        break
+
+    except Exception:
+        print()
+        print("Oh oh! The program cannot save its data. Report this issue to the creator.")
+        print()
+        time.sleep(5)
+        SystemExit()
 
     return;
 
@@ -395,38 +395,40 @@ def loadData():
     return;
 
 def materialUpdater():
-    
-    print("Press '1' to add a material.")
-    print("Press '2' to remove a material.")
-    print()
 
-    selection = getInteger("Please make your selection: ")
-
-    if selection == 1:
+    if MATS_NAME:
+        print("Press '1' to add a material.")
+        print("Press '2' to remove a material.")
+        print("Press '3' to exit to the main menu.")
         print()
 
-        print("The current materials are: ")
-        print()
-        y = int(0)
+        selection = getInteger("Please make your selection: ")
 
-        while y < ORES:
-            print(MATS_NAME[y])
-            y += 1
-        print()
+        if selection == 1:
+            print()
 
-        material_Name = getString("Input name of the new material: ")
-        MATS_NAME.append(material_Name)
-        MATS_VALUE.append(0)
-        SHIP_VALUE.append(0)
-        cls()
-        saveData()
-        coreFunction()
-
-    elif selection == 2:
-        print()
-        if MATS_NAME:
             print("The current materials are: ")
             print()
+            y = int(0)
+
+            while y < ORES:
+                print(MATS_NAME[y])
+                y += 1
+            print()
+
+            material_Name = getString("Input name of the new material: ")
+            MATS_NAME.append(material_Name)
+            MATS_VALUE.append(0)
+            SHIP_VALUE.append(0)
+            cls()
+            saveData()
+            coreFunction()
+
+        elif selection == 2:
+            print()
+            print("The current materials are: ")
+            print()
+
             m = int(0)
 
             while m < ORES:
@@ -434,17 +436,48 @@ def materialUpdater():
                 m += 1
             print()
 
-            material_Name2 = getInteger("Input integer of the material you wish to remove: ")
-            MATS_NAME.pop(material_Name2)
-            MATS_VALUE.pop(material_Name2)
-            SHIP_VALUE.pop(material_Name2)
+            if beginChoice == 'y':
+                material_Name2 = getInteger("Input integer of the material you wish to remove: ")
+                MATS_NAME.pop(material_Name2)
+                MATS_VALUE.pop(material_Name2)
+                SHIP_VALUE.pop(material_Name2)
+                cls()
+                saveData()
+                coreFunction()
+
+            elif beginChoice == 'n':
+                material_Name2 = getInteger("Input integer of the material you wish to remove: ")
+                MATS_NAME.pop(material_Name2)
+                MATS_VALUE.pop(material_Name2)
+                SHIP_VALUE.pop(material_Name2)
+                cls()
+                saveData()
+                coreFunction()
+
+
+        elif selection == 3:
+            cls()
+            coreFunction()
+            
+
+    elif not MATS_NAME:
+        print("Press '1' to add a material.")
+        print("Press '2' to  exit to the main menu.")
+        print()
+
+        selection = getInteger("Please make your selection: ")
+
+        if selection == 1:
+            print()
+            material_Name = getString("Input name of the new material: ")
+            MATS_NAME.append(material_Name)
+            MATS_VALUE.append(0)
+            SHIP_VALUE.append(0)
             cls()
             saveData()
             coreFunction()
 
-        if not MATS_NAME:
-            print("You cannot remove materials if there are none!")
-            time.sleep(2)
+        elif selection == 2:
             cls()
             coreFunction()
 
@@ -456,7 +489,12 @@ def loadExtraMaterial():
     global MATS_VALUE
     global SHIP_VALUE
     global beginChoice
+    global updated_MATS_NAME
+    global updated_MATS_VALUE
     
+    updated_MATS_NAME = []
+    updated_MATS_VALUE = []
+
     try:
         
         if beginChoice == 'y':
@@ -465,10 +503,10 @@ def loadExtraMaterial():
                 line_counter = 0
                 for row in csv_reader:
                     line_counter += 1
-                    if line_counter > 7:
-                        MATS_NAME.append(row[0])
-                        MATS_VALUE.append(row[1])
-                        line_counter += 1
+                    updated_MATS_NAME.append(row[0])
+                    updated_MATS_VALUE.append(row[1])
+                    MATS_NAME = updated_MATS_NAME
+                    MATS_VALUE = updated_MATS_VALUE
 
         elif beginChoice == 'n':
             with open("output_data.csv") as csv_file:
@@ -546,17 +584,17 @@ def firstLoading():
         else:
             print()
             print("Please make a valid selection.")
-            timer00 = threading.Timer(2, cls)
-            timer00.start()
-            timer15 = threading.Timer(2.1, coreFunction)
-            timer15.start()
+            time.sleep(2)
+            cls()
+            coreFunction()
+
     elif firstLoad == 0:
         if beginChoice ==  'y':
             MATS_NAME = [SILICATE_NAME, CARBON_NAME, IRIDIUM_NAME, ADAMANTITE_NAME, PALLADIUM_NAME, TITANIUM_NAME, QUANTIUM_NAME]
             MATS_VALUE = [SILICATE, CARBON, IRIDIUM, ADAMANTITE, PALLADIUM, TITANIUM, QUANTIUM]
             SHIP_VALUE = list(MATS_VALUE)
             loadExtraMaterial()
-        elif beginChoice == 'n':
+        if beginChoice == 'n':
             MATS_NAME = []
             MATS_VALUE = []
             SHIP_VALUE = list(MATS_VALUE)
