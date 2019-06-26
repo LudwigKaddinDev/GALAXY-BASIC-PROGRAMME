@@ -19,7 +19,6 @@ import time
 COST_ENABLED = True
 TOGGLE = 0
 ENTERED_VALUE = False
-popSource = 0
 
 # Standard Defined Materials
 
